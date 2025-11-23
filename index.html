@@ -345,8 +345,11 @@
 
 /* Map highlight for selected groups */
 .parish-region.group-highlight {
-  fill: #345729 !important; /* change this color any time */
-  stroke-width: 1.5;
+  stroke: #00b0db;
+  stroke-width: 80px;
+  stroke-linejoin: round;
+  /*stroke-opacity: 0.8;*/
+  filter: url(#groupGlow);
 }
 
     .filter-row {
@@ -466,7 +469,7 @@
 
     .parish-region.visited {
       fill: #fbbf24;
-      stroke: rgba(15, 23, 42, 0.95);
+      /*stroke: rgba(15, 23, 42, 0.95);*/
     }
 
     .visited-tag .parish-main .parish-name {
@@ -475,7 +478,7 @@
 
     .parish-region.unvisited {
       fill: rgba(75, 85, 99, 0.9);
-      stroke: rgba(15, 23, 42, 0.95);
+      /*stroke: rgba(15, 23, 42, 0.95);*/
     }
 
     .parish-region:hover {
@@ -718,6 +721,100 @@
         right: 0.5rem;
       }
     }
+
+    .update-section {
+  display: none;  /* hidden until user expands it */
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.modal-hint {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-bottom: 0.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.field-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.field span {
+  font-size: 0.85rem;
+}
+
+.local-photo-preview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.local-photo-preview img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.4rem;
+  border: 1px solid rgba(255,255,255,0.18);
+}
+
+.update-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+/* Inputs in the modal update section */
+.update-section .field input[type="date"],
+.update-section .field input[type="file"] {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #f5f5f5;
+  border-radius: 0.45rem;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.update-section .field input[type="date"]:focus,
+.update-section .field input[type="file"]:focus {
+  outline: none;
+  border-color: #4d7cff;
+  box-shadow: 0 0 0 1px rgba(77,124,255,0.65);
+}
+
+/* Make the file input's button look decent (modern browsers) */
+.update-section .field input[type="file"]::file-selector-button {
+  margin-right: 0.5rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.08);
+  color: #f5f5f5;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.update-section .field input[type="file"]::file-selector-button:hover {
+  background: rgba(255,255,255,0.16);
+}
+
+.update-section .field input[type="file"]::file-selector-button:active {
+  background: rgba(255,255,255,0.24);
+}
   </style>
 </head>
 <body>
@@ -744,6 +841,20 @@
           <!-- Inline SVG map -->
           <?xml version="1.0" standalone="yes"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="1254.55" height="1128.75" viewBox="-13946,-22685 50182,45150">
+  <defs>
+  <filter id="groupGlow" x="-50%" y="-50%" width="200%" height="200%">
+    <!-- Blur the alpha (shape) -->
+    <feGaussianBlur in="SourceAlpha" stdDeviation="1" result="blur" />
+    <!-- Color the blur -->
+    <feFlood flood-color="#00b0db" flood-opacity="0.4" result="color" />
+    <feComposite in="color" in2="blur" operator="in" result="coloredBlur" />
+    <!-- Merge original + glow -->
+    <feMerge>
+      <feMergeNode in="SourceGraphic" />
+      <feMergeNode in="coloredBlur" />
+    </feMerge>
+  </filter>
+</defs>
 
 <g stroke="black" fill="#fdf9d2" stroke-linejoin="round" stroke-width="80">
 <path id="Acadia" d="M -612,5549 l 1308,11 377,1 1787,6 97,4 132,-1 3,319 2,162 316,-13 331,1 14,416 -4,81 2,188 6,50 2,228 158,9 7,203 -4,121 82,0 81,4 1,40 0,21 -3,177 1,163 -40,-5 -128,1 7,162 -168,2 1,36 0,81 1,40 0,16 2,147 -56,-5 -275,13 7,157 -46,47 -35,10 -76,1 -112,27 -60,61 -30,66 -15,51 -10,51 -24,71 36,86 -29,158 -65,36 -40,56 -51,46 -10,16 -15,10 -30,31 -15,51 -10,5 -41,-10 -46,6 -60,26 -45,86 -30,67 -25,25 -61,37 -56,5 -61,1 -20,36 -59,132 -56,67 -9,20 -51,31 -61,52 -65,61 -35,66 -70,67 -46,51 -25,11 -30,41 -76,51 -86,37 -56,16 -106,16 -61,16 -56,36 -50,1 -82,-10 -61,-40 -88,-65 -91,-9 -123,-34 -81,-4 -72,-35 -51,-70 -102,-19 -31,-20 -31,-36 -41,-45 -21,-35 -56,-45 -11,-5 -41,-15 -46,-101 -57,-30 -66,1 -61,-45 -21,-5 -41,-14 -20,5 -30,20 -20,21 -21,5 0,10 -5,11 -4,15 -5,15 -36,11 -51,10 -30,41 -45,26 -26,11 -15,-5 -10,-15 -31,-10 -45,11 -36,20 -35,11 -31,15 -10,6 -35,35 -36,-9 -10,-56 -6,-25 20,-46 5,-21 4,-40 -5,-5 -30,-15 -26,-10 0,-35 9,-72 0,-10 -10,-15 -26,-20 0,-35 4,-26 0,-35 -10,-20 -11,-41 20,-41 19,-51 11,-20 40,-6 20,-10 31,-21 60,-76 -11,-51 -46,-35 -21,-40 -15,-26 45,-41 35,-20 61,-11 41,-21 25,0 20,-11 25,-25 -5,-46 -21,-35 -5,-20 -1,-36 51,-36 -11,-51 -10,-20 -16,-10 -25,-4 -10,5 -41,5 -21,-25 -20,-20 -20,5 -36,-4 -11,-31 -15,-40 -16,-30 -21,-51 -36,-60 -21,-41 -6,-55 10,-41 0,-20 -21,-46 -1,-35 15,-46 10,-36 -6,-50 -36,-30 10,-46 25,-71 -16,-46 -5,-20 -16,-30 15,-36 15,-41 -21,-55 -6,-46 50,-46 10,-26 -10,-30 -36,-20 -41,-30 -6,-30 61,-46 -16,-31 10,-45 45,-47 4,-81 -35,-20 -11,-40 -26,-25 -5,-41 40,-41 -11,-25 -41,-50 25,-41 -16,-51 0,-25 -21,-45 10,-56 30,-21 46,25 10,-25 5,-16 10,-10 20,-15 15,4 11,16 10,10 31,-11 25,-10 15,-31 -1,-35 -11,-102 10,-45 19,-67 10,-30 0,-41 15,-15 15,-5 35,-21 -11,-76 -61,-70 -11,-51 -47,-70 -31,-40 -15,-21 -21,-20 -36,-30 -26,-35 -6,-66 -57,-106 -5,-20 z"/>
@@ -1197,6 +1308,37 @@
             <div id="photoEmpty" class="modal-empty-photos">No photos added yet.</div>
           </div>
         </div>
+        <button type="button" class="btn btn-secondary btn-full" id="toggleUpdateSection" style="margin-top: 0.75rem;">
+          Update this Parish
+        </button>
+        <div class="modal-section update-section">
+        <h3>Update Visit (this device only)</h3>
+        <p class="modal-hint">
+          Changes here are saved only in this browser. Use “Submit Changes” to email Jason an update.
+        </p>
+
+        <label class="field-inline">
+          <input type="checkbox" id="updateVisitedCheckbox">
+          <span>Mark this parish as visited</span>
+        </label>
+
+        <label class="field">
+          <span>Date visited</span>
+          <input type="date" id="updateVisitedDate">
+        </label>
+
+        <label class="field">
+          <span>Photos for this visit (optional)</span>
+          <input type="file" id="updatePhotosInput" accept="image/*" multiple>
+        </label>
+
+        <div id="localPhotoPreview" class="local-photo-preview"></div>
+
+        <div class="update-actions">
+          <button id="applyLocalUpdate" class="btn btn-secondary">Apply Locally</button>
+          <button id="submitChangesBtn" class="btn btn-primary">Submit Changes</button>
+        </div>
+      </div>
       </div>
     </div>
   </div>
@@ -1915,6 +2057,26 @@
   }
 };
 
+let parishOverrides = loadOverrides();
+let currentParishId = null;
+
+function loadOverrides() {
+  try {
+    const raw = localStorage.getItem('parishOverrides_v1');
+    return raw ? JSON.parse(raw) : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveOverrides() {
+  try {
+    localStorage.setItem('parishOverrides_v1', JSON.stringify(parishOverrides));
+  } catch (e) {
+    // ignore quota or private mode issues
+  }
+}
+
   const totalParishes = Object.keys(parishesData).length;
 
 function initMap() {
@@ -2044,77 +2206,239 @@ function initMap() {
     render();
   }
 
-  function openParishModal(svgId) {
-    const data = parishesData[svgId];
-    if (!data) return;
+function openParishModal(svgId) {
+  const data = parishesData[svgId];
+  if (!data) return;
 
-    const modalBackdrop = document.getElementById('modalBackdrop');
-    const titleEl = document.getElementById('modalTitle');
-    const subtitleEl = document.getElementById('modalSubtitle');
-    const seatEl = document.getElementById('detailSeat');
-    const addrEl = document.getElementById('detailAddress');
-    const yearEl = document.getElementById('detailYear');
-    const visitedEl = document.getElementById('detailVisited');
-    const groupEl = document.getElementById('detailGroup');
-    const originEl = document.getElementById('detailOrigin');
-    const etymologyEl = document.getElementById('detailEtymology');
-    const photoContainer = document.getElementById('photoContainer');
-    const photoEmpty = document.getElementById('photoEmpty');
+  currentParishId = svgId;
+  const override = parishOverrides[svgId] || {};
 
-    const shortName = data.parishName.replace(' Parish', '');
-    titleEl.textContent = shortName;
-    subtitleEl.textContent = (data.seat || 'Unknown seat') + (data.courthouseAddress ? ' • ' + data.courthouseAddress : '');
+  const modalBackdrop = document.getElementById('modalBackdrop');
+  const titleEl = document.getElementById('modalTitle');
+  const subtitleEl = document.getElementById('modalSubtitle');
+  const seatEl = document.getElementById('detailSeat');
+  const addrEl = document.getElementById('detailAddress');
+  const yearEl = document.getElementById('detailYear');
+  const visitedEl = document.getElementById('detailVisited');
+  const groupEl = document.getElementById('detailGroup');
+  const originEl = document.getElementById('detailOrigin');
+  const etymologyEl = document.getElementById('detailEtymology');
+  const photoContainer = document.getElementById('photoContainer');
+  const photoEmpty = document.getElementById('photoEmpty');
 
-    seatEl.textContent = data.seat || '—';
-    const address = data.courthouseAddress && data.courthouseAddress.trim()
-      ? data.courthouseAddress.trim()
-      : '';
+  // NEW: update controls
+  const updateVisitedCheckbox = document.getElementById('updateVisitedCheckbox');
+  const updateVisitedDate = document.getElementById('updateVisitedDate');
+  const updatePhotosInput = document.getElementById('updatePhotosInput');
+  const localPhotoPreview = document.getElementById('localPhotoPreview');
+  const applyLocalBtn = document.getElementById('applyLocalUpdate');
+  const submitChangesBtn = document.getElementById('submitChangesBtn');
+  const updateSection = document.querySelector('.update-section');
+  const toggleUpdateBtn = document.getElementById('toggleUpdateSection');
 
-    if (address) {
-      const query = encodeURIComponent(address);
-      const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
-      addrEl.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${address}</a>`;
-    } else {
-      addrEl.textContent = '—';
+  const shortName = data.parishName.replace(' Parish', '');
+  titleEl.textContent = shortName;
+  subtitleEl.textContent = (data.seat || 'Unknown seat') + (data.courthouseAddress ? ' • ' + data.courthouseAddress : '');
+
+  seatEl.textContent = data.seat || '—';
+
+  const address = data.courthouseAddress && data.courthouseAddress.trim()
+    ? data.courthouseAddress.trim()
+    : '';
+
+  if (address) {
+    const query = encodeURIComponent(address);
+    const url = `https://www.google.com/maps/search/?api=1&query=${query}`;
+    addrEl.innerHTML = `<a href="${url}" target="_blank" rel="noopener noreferrer">${address}</a>`;
+  } else {
+    addrEl.textContent = '—';
+  }
+
+  yearEl.textContent = data.yearEstablished || '—';
+  groupEl.textContent = data.group || '—';
+
+  // Use override date if present, otherwise baseline
+  const effectiveVisitedDate = override.dateVisitedDisplay || data.dateVisited || '';
+  if (effectiveVisitedDate) {
+    visitedEl.textContent = effectiveVisitedDate + ' ✅';
+  } else {
+    visitedEl.textContent = 'Not yet visited';
+  }
+
+  originEl.innerHTML = data.origin
+    ? ('<div class="pill-mini"><span class="dot"></span><span>Origin</span></div>' + data.origin)
+    : '';
+  etymologyEl.innerHTML = data.etymology
+    ? ('<div class="pill-mini"><span class="dot" style="background: var(--color-accent);"></span><span>Name</span></div>' + data.etymology)
+    : '';
+
+  // Existing photo handling via autoLoadPhotos
+  photoContainer.innerHTML = '';
+
+  autoLoadPhotos(svgId).then(photos => {
+    if (photos.length === 0) {
+      photoEmpty.style.display = "block";
+      return;
     }
-    yearEl.textContent = data.yearEstablished || '—';
-    visitedEl.textContent = data.dateVisited ? (data.dateVisited + ' ✅') : 'Not yet visited';
-    groupEl.textContent = data.group || '—';
 
-    originEl.innerHTML = data.origin ? ('<div class="pill-mini"><span class="dot"></span><span>Origin</span></div>' + data.origin) : '';
-    etymologyEl.innerHTML = data.etymology ? ('<div class="pill-mini"><span class="dot" style="background: var(--color-accent);"></span><span>Name</span></div>' + data.etymology) : '';
+    photoEmpty.style.display = "none";
 
-    // Photos
-photoContainer.innerHTML = '';
+    photos.forEach((src, index) => {
+      const wrap = document.createElement("div");
+      wrap.className = "photo-thumb";
 
-autoLoadPhotos(svgId).then(photos => {
-  if (photos.length === 0) {
-    photoEmpty.style.display = "block";
-    return;
-  }
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = `${data.parishName} courthouse photo ${index + 1}`;
 
-  photoEmpty.style.display = "none";
+      const label = document.createElement("span");
+      label.textContent = `Photo ${index + 1}`;
 
-  photos.forEach((src, index) => {
-    const wrap = document.createElement("div");
-    wrap.className = "photo-thumb";
-
-    const img = document.createElement("img");
-    img.src = src;
-    img.alt = `${data.parishName} courthouse photo ${index + 1}`;
-
-    const label = document.createElement("span");
-    label.textContent = `Photo ${index + 1}`;
-
-    wrap.appendChild(img);
-    wrap.appendChild(label);
-    photoContainer.appendChild(wrap);
+      wrap.appendChild(img);
+      wrap.appendChild(label);
+      photoContainer.appendChild(wrap);
+    });
   });
-});
 
-    modalBackdrop.classList.add('open');
-    modalBackdrop.setAttribute('aria-hidden', 'false');
+  // --- Local update UI ---
+
+  // Initialize controls based on overrides / baseline
+  if (updateVisitedCheckbox) {
+    updateVisitedCheckbox.checked = !!(override.visited || data.dateVisited);
   }
+
+  if (updateVisitedDate) {
+    updateVisitedDate.value = override.dateVisitedISO || '';
+  }
+
+  if (localPhotoPreview) {
+    localPhotoPreview.innerHTML = '';
+  }
+  if (updatePhotosInput) {
+    updatePhotosInput.value = '';
+  }
+
+  // Local photo preview for this session only
+  if (updatePhotosInput && localPhotoPreview) {
+    updatePhotosInput.onchange = () => {
+      localPhotoPreview.innerHTML = '';
+      const files = updatePhotosInput.files;
+      if (!files || !files.length) return;
+      Array.from(files).forEach(file => {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.alt = file.name;
+        localPhotoPreview.appendChild(img);
+      });
+    };
+  }
+
+  // Apply Locally button: store override in localStorage
+  if (applyLocalBtn && updateVisitedCheckbox && updateVisitedDate) {
+  applyLocalBtn.onclick = () => {
+    const visited = updateVisitedCheckbox.checked;
+    const iso = updateVisitedDate.value || '';
+    let display = '';
+
+    if (iso) {
+      // convert YYYY-MM-DD → M/D/YYYY
+      const [y, m, d] = iso.split('-');
+      display = `${parseInt(m, 10)}/${parseInt(d, 10)}/${y}`;
+    }
+
+    parishOverrides[svgId] = {
+      visited,
+      dateVisitedISO: iso,
+      dateVisitedDisplay: display
+    };
+    saveOverrides();
+
+    // Update visited text in modal
+    if (display || data.dateVisited) {
+      visitedEl.textContent = (display || data.dateVisited) + ' ✅';
+    } else {
+      visitedEl.textContent = 'Not yet visited';
+    }
+
+    // 🔽 Update SVG coloring based on local visited state
+    const parishElem = document.getElementById(svgId);
+    if (parishElem) {
+      const targets =
+        parishElem.tagName.toLowerCase() === 'g'
+          ? parishElem.querySelectorAll('.parish-region')
+          : [parishElem];
+
+      targets.forEach(el => {
+        el.classList.remove('visited', 'unvisited');
+        el.classList.add(visited ? 'visited' : 'unvisited');
+      });
+    }
+
+    // (Optional future step: also update stats & list)
+  };
+}
+
+  // Submit Changes button: mailto with structured info
+  if (submitChangesBtn) {
+    submitChangesBtn.onclick = () => {
+      const o = parishOverrides[svgId] || {};
+      const files = updatePhotosInput && updatePhotosInput.files
+        ? Array.from(updatePhotosInput.files)
+        : [];
+
+      const subject = `Parish update: ${data.parishName}`;
+      const lines = [];
+
+      lines.push(`Parish ID: ${svgId}`);
+      lines.push(`Parish Name: ${data.parishName}`);
+      lines.push(`Seat: ${data.seat || ''}`);
+      lines.push(`Courthouse Address: ${data.courthouseAddress || ''}`);
+      lines.push('');
+      lines.push(`Marked Visited (local): ${o.visited || data.dateVisited ? 'Yes' : 'No'}`);
+      lines.push(`Visit Date (local override): ${o.dateVisitedDisplay || ''}`);
+      lines.push(`Existing Visit Date (baseline data): ${data.dateVisited || ''}`);
+      lines.push('');
+
+      if (files.length) {
+        lines.push('Selected photo filenames (attach these in your email):');
+        files.forEach(f => lines.push(` - ${f.name}`));
+      } else {
+        lines.push('No new photos selected in the app.');
+      }
+
+      lines.push('');
+      lines.push('Generated from the courthouse ride map.');
+
+      const body = encodeURIComponent(lines.join('\n'));
+      const mailto = `mailto:jas.stelzer@gmail.com?subject=${encodeURIComponent(subject)}&body=${body}`;
+      window.location.href = mailto;
+    };
+  }
+// Reset and wire the Update Visit toggle
+  if (updateSection && toggleUpdateBtn) {
+    // Always start hidden when opening the modal
+    updateSection.style.display = 'none';
+    toggleUpdateBtn.textContent = 'Update this Parish';
+
+    if (!toggleUpdateBtn.dataset.bound) {
+      toggleUpdateBtn.addEventListener('click', () => {
+        const isHidden =
+          updateSection.style.display === 'none' || !updateSection.style.display;
+
+        updateSection.style.display = isHidden ? 'block' : 'none';
+        toggleUpdateBtn.textContent = isHidden
+          ? 'Hide Local Update'
+          : 'Update this Parish';
+      });
+
+      // mark so we don't double-bind the listener
+      toggleUpdateBtn.dataset.bound = 'true';
+    }
+  }
+  modalBackdrop.classList.add('open');
+  modalBackdrop.setAttribute('aria-hidden', 'false');
+}
+
 
 function highlightParish(svgId) {
   document.querySelectorAll('.parish-region.active').forEach(el => el.classList.remove('active'));
@@ -2139,29 +2463,76 @@ function highlightParish(svgId) {
     }
   }
 
-  function setupZoomControls() {
-    const mapInner = document.getElementById('mapInner');
-    const zoomButtons = document.querySelectorAll('.map-controls button[data-zoom]');
-    let zoomLevel = 1;
+function setupZoomControls() {
+  const mapInner = document.getElementById('mapInner');
+  const zoomButtons = document.querySelectorAll('.map-controls button[data-zoom]');
+  let zoomLevel = 1;
 
-    function applyZoom() {
-      mapInner.style.transform = 'scale(' + zoomLevel.toFixed(2) + ')';
-    }
-
-    zoomButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const dir = btn.getAttribute('data-zoom');
-        if (dir === 'in') {
-          zoomLevel = Math.min(zoomLevel * 1.2, 4);
-        } else {
-          zoomLevel = Math.max(zoomLevel / 1.2, 0.6);
-        }
-        applyZoom();
-      });
-    });
-
-    applyZoom();
+  function applyZoom() {
+    mapInner.style.transform = 'scale(' + zoomLevel.toFixed(2) + ')';
   }
+
+  // Button-based zoom
+  zoomButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const dir = btn.getAttribute('data-zoom');
+      if (dir === 'in') {
+        zoomLevel = Math.min(zoomLevel * 1.2, 4);
+      } else {
+        zoomLevel = Math.max(zoomLevel / 1.2, 0.6);
+      }
+      applyZoom();
+    });
+  });
+
+  // --- Touch pinch zoom (two-finger) ---
+  let isPinching = false;
+  let startDistance = 0;
+  let startZoom = zoomLevel;
+
+  function getDistance(touches) {
+    const dx = touches[0].clientX - touches[1].clientX;
+    const dy = touches[0].clientY - touches[1].clientY;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  // Start pinch
+  mapInner.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      isPinching = true;
+      startDistance = getDistance(e.touches);
+      startZoom = zoomLevel;
+    }
+  }, { passive: true });
+
+  // Move pinch (adjust zoom)
+  mapInner.addEventListener('touchmove', (e) => {
+    if (!isPinching || e.touches.length !== 2) return;
+
+    // prevent page from doing its own pinch-zoom here
+    e.preventDefault();
+
+    const currentDistance = getDistance(e.touches);
+    const factor = currentDistance / startDistance;
+
+    zoomLevel = startZoom * factor;
+    // clamp zoom
+    zoomLevel = Math.max(0.6, Math.min(4, zoomLevel));
+    applyZoom();
+  }, { passive: false });
+
+  // End pinch
+  function endPinch(e) {
+    if (e.touches && e.touches.length >= 2) return;
+    isPinching = false;
+  }
+
+  mapInner.addEventListener('touchend', endPinch);
+  mapInner.addEventListener('touchcancel', endPinch);
+
+  applyZoom();
+}
+
 
   function setupGroupViewer() {
   const groupFiltersEl = document.getElementById('groupFilters');
