@@ -11,10 +11,10 @@
       --color-border: #1f2937;
       --color-text: #e5e7eb;
       --color-muted: #9ca3af;
-      --color-accent: #fbbf24;
-      --color-visited: #22c55e;
+      --color-accent: #013660;
+      --color-visited: #fbbf24;
       --color-unvisited: #6b7280;
-      --color-highlight: #f97316;
+      --color-highlight: #013660;
     }
 
     * {
@@ -209,7 +209,7 @@
 
     .stats {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(1, minmax(0, 1fr));
       gap: 0.75rem;
       margin-bottom: 0.75rem;
     }
@@ -259,6 +259,95 @@
       background: linear-gradient(90deg, #22c55e, #a3e635);
       transition: width 0.4s ease-out;
     }
+
+    .group-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.35rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+
+.group-filter-grid label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  padding: 0.2rem 0.35rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  user-select: none;
+}
+
+.group-filter-grid input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Base Button Style */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  text-align: center;
+  user-select: none;
+  border: 1px solid transparent;
+}
+
+/* Primary Button (Action) */
+.btn-primary {
+  background: #4d7cff;              /* Soft blue accent */
+  color: #fff;
+  border-color: #4d7cff;
+}
+
+.btn-primary:hover {
+  background: #3a66e0;
+  border-color: #3a66e0;
+}
+
+.btn-primary:active {
+  background: #2a53bd;
+  border-color: #2a53bd;
+}
+
+/* Secondary Button (Neutral / Utility) */
+.btn-secondary {
+  background: rgba(255,255,255,0.06);
+  color: #e0e0e0;
+  border-color: rgba(255,255,255,0.15);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.25);
+}
+
+.btn-secondary:active {
+  background: rgba(255,255,255,0.18);
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* Full-Width Helper */
+.btn-full {
+  width: 100%;
+}/* Button helper if you don't already have one */
+.btn-full {
+  width: 100%;
+}
+
+/* Map highlight for selected groups */
+.parish-region.group-highlight {
+  fill: #345729 !important; /* change this color any time */
+  stroke-width: 1.5;
+}
 
     .filter-row {
       display: flex;
@@ -376,8 +465,12 @@
     }
 
     .parish-region.visited {
-      fill: rgba(34, 197, 94, 0.9);
+      fill: #fbbf24;
       stroke: rgba(15, 23, 42, 0.95);
+    }
+
+    .visited-tag .parish-main .parish-name {
+      color: #fbbf24;
     }
 
     .parish-region.unvisited {
@@ -386,7 +479,7 @@
     }
 
     .parish-region:hover {
-      stroke: var(--color-highlight);
+      stroke: var(--color-accent);
       stroke-width: 120;
       transform: translateY(-5px);
     }
@@ -592,7 +685,7 @@
     }
 
     footer span.highlight-text {
-      color: var(--color-accent);
+      color: var(--color-visited);
     }
 
     @media (max-width: 900px) {
@@ -631,9 +724,9 @@
   <header>
     <h1>
       <span>Louisiana Parish Courthouse Ride</span>
-      <span class="badge">Map Viewer</span>
+      <span class="badge">Map Tracker</span>
     </h1>
-    <p>Tap a parish on the map to see the courthouse details and mark your progress toward all 64 Louisiana parishes.</p>
+    <p>Tap a parish on the map to see the details and view your progress toward all 64 Louisiana parishes.</p>
   </header>
 
   <div class="layout">
@@ -1044,10 +1137,17 @@
           </div>
           <div class="stat-sub"><span id="percentComplete">0</span>% complete &bull; <span id="remainingCount">64</span> to go</div>
         </div>
-        <div class="stat-card secondary">
-          <div class="stat-label">Trip Planner</div>
-          <div class="stat-value" id="largestCluster">–</div>
-          <div class="stat-sub">Largest group of neighboring unvisited parishes<span id="clusterHint"></span></div>
+        <div class="stat-card secondary" id="groupViewerCard">
+          <div class="stat-label">Group Viewer</div>
+          <div class="stat-sub">
+            Toggle one or more groups to highlight them on the map.
+          </div>
+          <div id="groupFilters" class="group-filter-grid">
+            <!-- checkboxes are injected by JS -->
+          </div>
+          <button id="clearGroupFilters" class="btn btn-secondary btn-full">
+            Clear selection
+          </button>
         </div>
       </div>
 
@@ -1094,7 +1194,7 @@
           <h3>Ride photos</h3>
           <div class="modal-photos">
             <div id="photoContainer" class="photo-grid"></div>
-            <div id="photoEmpty" class="modal-empty-photos">No photos added yet. Once you have images for this parish, you can add file paths into the data section and they will appear here.</div>
+            <div id="photoEmpty" class="modal-empty-photos">No photos added yet.</div>
           </div>
         </div>
       </div>
@@ -2063,6 +2163,82 @@ function highlightParish(svgId) {
     applyZoom();
   }
 
+  function setupGroupViewer() {
+  const groupFiltersEl = document.getElementById('groupFilters');
+  const clearBtn = document.getElementById('clearGroupFilters');
+  if (!groupFiltersEl || !clearBtn) return;
+
+  // Collect distinct groups from the data (A–M)
+  const groupSet = new Set();
+  for (const data of Object.values(parishesData)) {
+    if (data.group) groupSet.add(data.group);
+  }
+  const groups = Array.from(groupSet).sort(); // e.g., ["A","B","C",...]
+
+  // Build checkboxes for each group
+  groups.forEach(group => {
+    const id = `group-${group}`;
+    const label = document.createElement('label');
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = id;
+    input.value = group;
+
+    const span = document.createElement('span');
+    span.textContent = group;
+
+    label.appendChild(input);
+    label.appendChild(span);
+    groupFiltersEl.appendChild(label);
+  });
+
+  const selectedGroups = new Set();
+
+  function applyGroupHighlight() {
+    // Remove old highlights
+    document
+      .querySelectorAll('.parish-region.group-highlight')
+      .forEach(el => el.classList.remove('group-highlight'));
+
+    if (!selectedGroups.size) return;
+
+    // Apply highlight to any parish whose data.group is selected
+    for (const [svgId, data] of Object.entries(parishesData)) {
+      if (!data.group || !selectedGroups.has(data.group)) continue;
+
+      const elem = document.getElementById(svgId);
+      if (!elem) continue;
+
+      if (elem.tagName && elem.tagName.toLowerCase() === 'g') {
+        elem.querySelectorAll('path').forEach(p => p.classList.add('group-highlight'));
+      } else {
+        elem.classList.add('group-highlight');
+      }
+    }
+  }
+
+  groupFiltersEl.addEventListener('change', (e) => {
+    if (e.target && e.target.type === 'checkbox') {
+      const g = e.target.value;
+      if (e.target.checked) {
+        selectedGroups.add(g);
+      } else {
+        selectedGroups.delete(g);
+      }
+      applyGroupHighlight();
+    }
+  });
+
+  clearBtn.addEventListener('click', () => {
+    selectedGroups.clear();
+    groupFiltersEl.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+    });
+    applyGroupHighlight();
+  });
+}
+
   function setupModalClose() {
     const modalBackdrop = document.getElementById('modalBackdrop');
     const closeBtn = document.getElementById('modalClose');
@@ -2088,6 +2264,7 @@ function highlightParish(svgId) {
 
   document.addEventListener('DOMContentLoaded', () => {
     initMap();
+    setupGroupViewer();
     setupModalClose();
   });
 
